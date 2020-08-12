@@ -10,16 +10,19 @@ var (
 )
 func main(){
 	nuevaConexionDB()
+	crearTablaBD()
+	resultadosQuery("tipo_membresia")
 	tablaBD()
+	var nombre string
+	agregarBD()
 	cerrarDB()
-	//membresia("membresia","tipo_membresia")
-	//resultadosQuery("tipo_membresia")
+	
     
 }
 func nuevaConexionDB(){
 	//usuario:contraseña@tcp(direccion:puerto)/nombreBase
-	//db, err = sql.Open("mysql", string("bienhechor:Bienhechor_1234;@tcp(74.208.31.248:3306)/bienhechor"))
-	db, err = sql.Open("mysql", string("root:@tcp(127.0.0.1:3306)/bienhechor"))
+	db, err = sql.Open("mysql", string("bienhechor:Bienhechor_1234;@tcp(74.208.31.248:3306)/bienhechor"))
+	
 	if err != nil{
 		panic(err)
 		fmt.Println("False")
@@ -35,13 +38,6 @@ func tablaBD(){
 	revisarError()
 	fmt.Println(datos)
 }
-/*func membresia (tabla string){
-	var tipo_membresia string
-	unicoDato := db.QueryRow("SELECT tipo_membresia FROM"+tabla+"WHERE id = ?", 1)
-	err = unicoDato.Scan(&tipo_membresia)
-	revisarError(err)
-	fmt.Println(tipo_membresia)
-}
 func resultadosQuery(){
 	query, _ := db.Query("SELECT * FROM membresia")
 
@@ -51,7 +47,46 @@ func resultadosQuery(){
 		revisarError(err)
 		fmt.Println(id,tipo_membresia)
 	}
-}*/
+}
+func crearTablaBD(tabla []Tablas) {
+	const nombreTabla = "membresia"
+
+	var tablaExist = false
+
+	for i := 0; i < len(tabla); i++ {
+		if tabla[i].Nombre == nombreTabla {
+			tablaExist = true
+		}
+	}
+
+	if tablaExist == false {
+		crear, err := db.Exec("CREATE TABLE " + membresia + "(id int primary key auto_increment, tipo_membresia varchar(50) not null);")
+		revisarError(err)
+		_, err = crear.RowsAffected()
+		revisaarError(err)
+	}
+
+}
+func verificar(nombre string){
+	verifica, err := db.Exec("SELECT"+nombre+" FROM"+membresia+"WHERE, ?", tipo_membresia)
+	if()
+}
+func agregarBD(membresia, columnas, nombre string) int64 {
+	ftm("Para agregar una membresia ingrese su nombre completo")
+	fmt.Scanf(&nombre)
+	insertar, err := db.Exec("INSERT INTO "+membresia+" ("+columnas+") VALUES ?", nombre)
+	revisarError(err)
+	status, err := insertar.LastInsertId()
+	return nombre
+	if(status!=0){
+		fmt("True")
+	}
+	else{
+		fmt.("False")
+	}
+
+
+}
 func revisarError(err error){
 	if err != nil{
 		panic(err)
